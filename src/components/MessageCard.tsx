@@ -25,6 +25,8 @@ import { Message } from '@/models/User'
 import { useToast } from './ui/use-toast'
 import axios from 'axios'
 import { apiResponse } from '@/types/apiResponse'
+import dayjs from 'dayjs';
+import Link from 'next/link';
 type MessageCradProps = {
     message: Message,
     onDelete: (messageId: string) => void,
@@ -40,12 +42,12 @@ const MessageCard = ({message , onDelete}: MessageCradProps) => {
         onDelete(message._id)
     }
   return (
-    <Card>
+    <Card className="card-bordered">
+      
         <CardHeader>
-            <CardTitle>Card Title</CardTitle>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button variant="destructive"><X className='h-5 w-5'/></Button>
+                        <Button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50" variant="destructive"><X className='h-5 w-5'/></Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
@@ -61,16 +63,15 @@ const MessageCard = ({message , onDelete}: MessageCradProps) => {
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
-            <CardDescription>Card Description</CardDescription>
+            <CardDescription>Cypher - Secret Adventure</CardDescription>
         </CardHeader>
         <CardContent>
-            <p>Card Content</p>
+            <p>{message.content}</p>
         </CardContent>
         <CardFooter>
-            <p>Card Footer</p>
+            <p>{dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}</p>
         </CardFooter>
     </Card>
-
   )
 }
 
