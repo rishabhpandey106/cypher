@@ -10,7 +10,6 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { signupSchema } from "@/schema/signupSchema"
 import { apiResponse } from "@/types/apiResponse"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -23,6 +22,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Loader2, LoaderCircle } from "lucide-react"
+import { BackgroundBeams } from "@/components/ui/background-beams"
 
 const page = () => {
 
@@ -90,8 +90,8 @@ const page = () => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+    <div className="flex relative justify-center items-center min-h-screen">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md relative z-10">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">Join Cypher</h1>
           <p className="mb-4">Signup to start your secret adventure</p>
@@ -164,13 +164,14 @@ const page = () => {
             </Button>
           </form>
       </Form>
-      <div className="text-center mt-4">
+      <div className="text-center mt-4 relative z-10">
         <p>
           Already have an account?{' '}
           <Link href="/signin" className="text-blue-600 hover:text-blue-800">SignIn</Link>
         </p>
       </div>
       </div>
+      <BackgroundBeams />
     </div>
   )
 }

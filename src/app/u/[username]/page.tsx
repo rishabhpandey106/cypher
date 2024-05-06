@@ -130,11 +130,11 @@ const page = () => {
         }}
         className="relative flex flex-col gap-4 items-center justify-center px-4"
       >
-    <div className="my-8 mx-2 md:mx-4 lg:mx-4 p-6 rounded w-full max-w-6xl">
-      <p className="text-4xl font-bold mb-6 text-center">
+    <div className="my-8 mx-2 md:mx-4 lg:mx-auto p-6 rounded w-full max-w-6xl relative z-10">
+      <p className="text-4xl font-bold mb-6 text-center relative z-10">
         Public Profile Link
       </p>
-      <p className="text-4xl font-bold mb-6 text-center pt-10">
+      <p className="text-4xl font-bold mb-6 text-center pt-12 relative z-10">
         Public Profile Link
       </p>
       <Form {...form}>
@@ -156,7 +156,7 @@ const page = () => {
               </FormItem>
             )}
           />
-          <div className="flex justify-center">
+          <div className="flex justify-center relative z-10">
             {isLoading ? (
               <Button disabled>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -171,7 +171,7 @@ const page = () => {
         </form>
       </Form>
 
-      <div className="space-y-4 my-8">
+      <div className="space-y-4 my-8 relative z-10">
         <div className="space-y-2">
           <Button
             onClick={fetchSuggestedMessages}

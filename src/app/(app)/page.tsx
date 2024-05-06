@@ -76,13 +76,13 @@ export default function Home() {
       <DrawerTrigger>Secret Message For You</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Aap gand marana chod diye?</DrawerTitle>
+          <DrawerTitle>Do you believe in end-to-end encryption??</DrawerTitle>
           <DrawerDescription>
           <DrawerClose>
-          <Button variant="default" className='mr-2'>Ha</Button>
+          <Button variant="default" className='mr-2'>Yes</Button>
           </DrawerClose>
           <DrawerClose>
-          <Button variant="destructive">Na</Button>
+          <Button variant="destructive">No</Button>
           </DrawerClose>
           </DrawerDescription>
         </DrawerHeader>

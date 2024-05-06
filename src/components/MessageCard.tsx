@@ -8,6 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -69,7 +70,10 @@ const MessageCard = ({message , onDelete}: MessageCradProps) => {
             <p className='text-3xl font-semibold'>{message.content}</p>
         </CardContent>
         <CardFooter>
-            <p>{dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}</p>
+        <div className='flex flex-row justify-between items-center'>
+            <p className='mr-4'>{dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}</p>
+            <Checkbox id="terms1" />
+        </div>
         </CardFooter>
     </Card>
   )
