@@ -66,7 +66,7 @@ const MessageCard = ({message , onDelete}: MessageCradProps) => {
             <CardDescription>Cypher - Secret Adventure</CardDescription>
         </CardHeader>
         <CardContent>
-            <p>{message.content}</p>
+            <p className='text-3xl font-semibold'>{message.content}</p>
         </CardContent>
         <CardFooter>
             <p>{dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}</p>

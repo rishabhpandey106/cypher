@@ -25,7 +25,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react'
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator'
-
+import { motion } from "framer-motion";
+import { TypewriterEffectSmooth  } from "../../../components/ui/typewriter-effect";
+import { AuroraBackground } from "../../../components/ui/aurora-background";
 const specialChar = '||';
 
 const parseStringMessages = (messageString: string): string[] => {
@@ -96,12 +98,45 @@ const page = () => {
       setIsLoading(false);
     }
   };
+
+  const words = [
+    {
+      text: "Start",
+    },
+    {
+      text: "getting",
+    },
+    {
+      text: "messages",
+    },
+    {
+      text: "with",
+    },
+    {
+      text: "Cypher.",
+      className: "text-blue-500 dark:text-blue-500",
+    },
+  ];
   
   return (
-    <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
-      <h1 className="text-4xl font-bold mb-6 text-center">
+    <AuroraBackground>
+      <motion.div
+        initial={{ opacity: 0.0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: 0.3,
+          duration: 0.8,
+          ease: "easeInOut",
+        }}
+        className="relative flex flex-col gap-4 items-center justify-center px-4"
+      >
+    <div className="my-8 mx-2 md:mx-4 lg:mx-4 p-6 rounded w-full max-w-6xl">
+      <p className="text-4xl font-bold mb-6 text-center">
         Public Profile Link
-      </h1>
+      </p>
+      <p className="text-4xl font-bold mb-6 text-center pt-10">
+        Public Profile Link
+      </p>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
@@ -171,12 +206,14 @@ const page = () => {
       </div>
       <Separator className="my-6" />
       <div className="text-center">
-        <div className="mb-4">Get Your Message Board</div>
-        <Link href={'/sign-up'}>
+      <TypewriterEffectSmooth words={words} className='flex justify-center items-center'/>
+        <Link href={'/signup'}>
           <Button>Create Your Account</Button>
         </Link>
       </div>
     </div>
+    </motion.div>
+    </AuroraBackground>
   )
 }
 

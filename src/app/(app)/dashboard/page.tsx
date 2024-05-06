@@ -14,7 +14,6 @@ import { User } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { HoverEffect } from "../../../components/ui/card-hover-effect";
 
 const page = () => {
   const [messages, setMessages] = useState<Message[]>([])
@@ -52,7 +51,7 @@ const page = () => {
     } finally {
       setSwitchLoading(false);
     }
-  }, [setValue, toast])
+  }, [session, setValue, toast])
 
   const fetchMessages = useCallback(async (refresh: boolean = false) => {
     setSwitchLoading(false);
