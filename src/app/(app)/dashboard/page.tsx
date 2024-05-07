@@ -110,7 +110,7 @@ function Dashboard() {
 
   const username = session?.user.username
   console.log(username)
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  const baseUrl = `https://cypher-git-master-rishabhpandey106s-projects.vercel.app`;
   const url = `${baseUrl}/u/${username}`;
 
   const copyToClipboard = async () => {
