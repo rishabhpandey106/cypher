@@ -71,7 +71,7 @@ export default function Home() {
       <div className="absolute inset-0 [mask-image:radial-gradient(400px_at_center,white,transparent)] bg-black/50 dark:bg-black/90" />
       
   </div>
-  <footer className="text-center p-4 md:p-6 bg-gray-900 text-white">
+  <footer className="text-center p-4 md:p-4 bg-gray-900 text-white">
     <div className='flex-col text-pink-500 animate-pulse'><Drawer>
       <DrawerTrigger>Secret Message For You</DrawerTrigger>
       <DrawerContent>

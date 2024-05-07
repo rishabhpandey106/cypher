@@ -5,6 +5,12 @@ import { useSession, signOut } from 'next-auth/react'
 import { User } from 'next-auth'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
+import Image from 'next/image'
+import {
+  TextRevealCard,
+  TextRevealCardDescription,
+  TextRevealCardTitle,
+} from "@/components/ui/text-reveal-card";
 
 const Navbar = () => {
     const {data: session} = useSession();
@@ -13,9 +19,19 @@ const Navbar = () => {
   return (
     <nav className="p-4 md:p-6 shadow-md bg-gray-900 text-white">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div className='flex justify-center items-center'><img
+          src="/3.png"
+          width={55}
+          height={55}
+          alt="Picture of the author"
+        />
         <a href="#" className="text-xl font-bold mb-4 md:mb-0">
-          Cypher : Secret Adventure
-        </a>
+          <TextRevealCard
+        text="Cypher"
+        revealText="Secret Adventure"
+      ></TextRevealCard>
+        </a></div>
+      
         {session ? (
           <>
             <span className="mr-8">

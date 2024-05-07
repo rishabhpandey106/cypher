@@ -14,6 +14,8 @@ import { User } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { AuroraBackground } from '@/components/ui/aurora-background'
+import { motion } from "framer-motion";
 
 const page = () => {
   const [messages, setMessages] = useState<Message[]>([])
@@ -51,7 +53,7 @@ const page = () => {
     } finally {
       setSwitchLoading(false);
     }
-  }, [session, setValue, toast])
+  }, [setValue, toast])
 
   const fetchMessages = useCallback(async (refresh: boolean = false) => {
     setSwitchLoading(false);
@@ -78,7 +80,7 @@ const page = () => {
       setSwitchLoading(false);
       setloading(false)
     }
-  }, [setloading, setMessages])
+  }, [setloading, setMessages, toast])
 
   useEffect(() => {
     if(!session || !session.user)
@@ -124,12 +126,13 @@ const page = () => {
   }
 
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
+    <AuroraBackground>
+    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 rounded w-full max-w-6xl relative z-10">
       <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 
-      <div className="mb-4">
+      <div className="mb-4 relative z-10">
         <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{' '}
-        <div className="flex items-center">
+        <div className="flex items-center relative z-10">
           <input
             type="text"
             value={url}
@@ -140,7 +143,7 @@ const page = () => {
         </div>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 relative z-10">
         <Switch
           {...register('acceptMessages')}
           checked={acceptMessages}
@@ -167,7 +170,7 @@ const page = () => {
           <RefreshCcw className="h-4 w-4" />
         )}
       </Button>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
       
         {messages.length > 0 ? (
           messages.map((message, index) => (
@@ -182,6 +185,8 @@ const page = () => {
         )}
       </div>
     </div>
+    </AuroraBackground>
+
   );
 
 }

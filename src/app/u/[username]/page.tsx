@@ -28,6 +28,7 @@ import { Separator } from '@/components/ui/separator'
 import { motion } from "framer-motion";
 import { TypewriterEffectSmooth  } from "../../../components/ui/typewriter-effect";
 import { AuroraBackground } from "../../../components/ui/aurora-background";
+
 const specialChar = '||';
 
 const parseStringMessages = (messageString: string): string[] => {
@@ -43,6 +44,14 @@ const page = () => {
   const params = useParams<{ username: string }>();
   const username = params.username;
   const {toast} = useToast();
+
+  const placeholders = [
+    "What's the first rule of Fight Club?",
+    "Who is Tyler Durden?",
+    "Where is Andrew Laeddis Hiding?",
+    "Write a Javascript method to reverse a string",
+    "How to assemble your own PC?",
+  ];
 
   const {
     complete,
