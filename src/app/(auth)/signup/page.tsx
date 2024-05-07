@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input"
 import { Loader2, LoaderCircle } from "lucide-react"
 import { BackgroundBeams } from "@/components/ui/background-beams"
 
-const page = () => {
+const SignupPage = () => {
 
   const [username, setUsername] = useState('')
   const [usernameMessage, setUsernameMessage] = useState('')
@@ -176,4 +176,4 @@ const page = () => {
   )
 }
 
-export default page
+export default SignupPage

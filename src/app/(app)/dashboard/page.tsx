@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form'
 import { AuroraBackground } from '@/components/ui/aurora-background'
 import { motion } from "framer-motion";
 
-const page = () => {
+function Dashboard() {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setloading] = useState(false)
   const [switchLoading, setSwitchLoading] = useState(false)
@@ -191,4 +191,4 @@ const page = () => {
 
 }
 
-export default page
+export default Dashboard

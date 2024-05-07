@@ -39,7 +39,7 @@ const initialMessageString =
   "What's your favorite movie?||Do you have any pets?||What's your dream job?";
 
 
-const page = () => {
+const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const params = useParams<{ username: string }>();
   const username = params.username;
@@ -226,4 +226,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Profile
