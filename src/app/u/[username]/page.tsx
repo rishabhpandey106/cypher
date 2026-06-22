@@ -1,12 +1,10 @@
 'use client'
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { useSession, signOut } from 'next-auth/react'
-import { User } from 'next-auth'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { useToast } from '@/components/ui/use-toast'
-import {useCompletion} from "ai/react"
+import { useCompletion } from "ai/react"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { messageSchema } from '@/schema/messageSchema'
 import { useForm } from 'react-hook-form'
@@ -22,12 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2 } from 'lucide-react'
-import { CardHeader, CardContent, Card } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator'
-import { motion } from "framer-motion";
-import { TypewriterEffectSmooth  } from "../../../components/ui/typewriter-effect";
-import { AuroraBackground } from "../../../components/ui/aurora-background";
+import { Loader2, Send } from 'lucide-react'
 
 const specialChar = '||';
 
@@ -38,20 +31,11 @@ const parseStringMessages = (messageString: string): string[] => {
 const initialMessageString =
   "What's your favorite movie?||Do you have any pets?||What's your dream job?";
 
-
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const params = useParams<{ username: string }>();
   const username = params.username;
   const {toast} = useToast();
-
-  const placeholders = [
-    "What's the first rule of Fight Club?",
-    "Who is Tyler Durden?",
-    "Where is Andrew Laeddis Hiding?",
-    "Write a Javascript method to reverse a string",
-    "How to assemble your own PC?",
-  ];
 
   const {
     complete,
@@ -68,7 +52,6 @@ const Profile = () => {
       complete('');
     } catch (error) {
       console.error('Error fetching messages:', error);
-      // Handle error appropriately
     }
   }
 
@@ -108,121 +91,107 @@ const Profile = () => {
     }
   };
 
-  const words = [
-    {
-      text: "Start",
-    },
-    {
-      text: "getting",
-    },
-    {
-      text: "messages",
-    },
-    {
-      text: "with",
-    },
-    {
-      text: "Cypher.",
-      className: "text-blue-500 dark:text-blue-500",
-    },
-  ];
-  
   return (
-    <AuroraBackground>
-      <motion.div
-        initial={{ opacity: 0.0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 0.3,
-          duration: 0.8,
-          ease: "easeInOut",
-        }}
-        className="relative flex flex-col gap-4 items-center justify-center px-4"
-      >
-    <div className="my-8 mx-2 md:mx-4 lg:mx-auto p-6 rounded w-full max-w-6xl relative z-10">
-      <p className="text-4xl font-bold mb-6 text-center relative z-10">
-        Public Profile Link
-      </p>
-      <p className="text-4xl font-bold mb-6 text-center pt-12 relative z-10">
-        Public Profile Link
-      </p>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Send Anonymous Message to @{username}</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Write your anonymous message here"
-                    className="resize-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex justify-center relative z-10">
-            {isLoading ? (
-              <Button disabled>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
-              </Button>
-            ) : (
-              <Button type="submit" disabled={isLoading || !messageContent}>
-                Send It
-              </Button>
-            )}
-          </div>
-        </form>
-      </Form>
+    <div className="min-h-screen bg-yellow-400 py-12 px-4 sm:px-6 lg:px-8 font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute top-10 -left-10 w-32 h-32 bg-blue-500 border-4 border-black rotate-12 z-0 hidden md:block"></div>
+      <div className="absolute bottom-20 -right-10 w-40 h-40 bg-pink-500 border-4 border-black -rotate-6 z-0 hidden md:block"></div>
 
-      <div className="space-y-4 my-8 relative z-10">
-        <div className="space-y-2">
-          <Button
-            onClick={fetchSuggestedMessages}
-            className="my-4"
-            disabled={isSuggestLoading}
-          >
-            Suggest Messages
-          </Button>
-          <p>Click on any message below to select it.</p>
+      <div className="w-full max-w-2xl relative z-10">
+        
+        {/* Main Card */}
+        <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-none mb-12 mt-8 md:mt-0">
+          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-8 leading-tight">
+            Send Anonymous Message To <br/><span className="bg-pink-500 text-white px-2 inline-block transform -rotate-2 mt-2 break-all">@{username}</span>
+          </h1>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Message</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="TYPE YOUR SECRET MESSAGE HERE..."
+                        className="resize-none h-32 border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-shadow text-lg font-bold p-4 uppercase placeholder:text-gray-400"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="font-bold uppercase" />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end">
+                {isLoading ? (
+                  <Button disabled className="bg-black text-white rounded-none border-4 border-black font-black uppercase tracking-widest px-8 py-6 text-lg w-full md:w-auto">
+                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                    SENDING...
+                  </Button>
+                ) : (
+                  <Button type="submit" disabled={isLoading || !messageContent} className="bg-blue-500 hover:bg-blue-600 text-white rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-black uppercase tracking-widest px-8 py-6 text-lg w-full md:w-auto">
+                    <Send className="mr-2 h-6 w-6" strokeWidth={3} /> SEND IT
+                  </Button>
+                )}
+              </div>
+            </form>
+          </Form>
         </div>
-        <Card>
-          <CardHeader>
-            <h3 className="text-xl font-semibold">Messages</h3>
-          </CardHeader>
-          <CardContent className="flex flex-col space-y-4">
+
+        {/* Suggested Messages Section */}
+        <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-none mb-12">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+            <h3 className="text-2xl font-black uppercase tracking-tight">Need Inspiration?</h3>
+            <Button
+              onClick={fetchSuggestedMessages}
+              disabled={isSuggestLoading}
+              className="bg-green-400 hover:bg-green-500 text-black rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-black uppercase w-full md:w-auto disabled:opacity-80"
+            >
+              {isSuggestLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" strokeWidth={3} />
+                  SUGGESTING...
+                </>
+              ) : (
+                "Suggest Messages"
+              )}
+            </Button>
+          </div>
+          
+          <div className="flex flex-col space-y-3">
             {error ? (
-              <p className="text-red-500">{error.message}</p>
+              <p className="text-red-500 font-bold uppercase border-4 border-red-500 p-4 bg-red-100">{error.message}</p>
             ) : (
               parseStringMessages(completion).map((message, index) => (
-                <Button
+                <button
                   key={index}
-                  variant="outline"
-                  className="mb-2"
+                  className="text-left w-full bg-gray-100 hover:bg-yellow-200 border-4 border-black p-4 font-bold text-lg transition-colors uppercase break-words"
                   onClick={() => handleMessageClick(message)}
                 >
                   {message}
-                </Button>
+                </button>
               ))
             )}
-          </CardContent>
-        </Card>
-      </div>
-      <Separator className="my-6" />
-      <div className="text-center">
-      <TypewriterEffectSmooth words={words} className='flex justify-center items-center'/>
-        <Link href={'/signup'}>
-          <Button>Create Your Account</Button>
-        </Link>
+          </div>
+        </div>
+
+        {/* Footer CTA */}
+        <div className="text-center mt-16 mb-8">
+          <div className="inline-block bg-black text-white p-6 border-4 border-black transform rotate-1 mb-6 shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]">
+            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-widest leading-none">Want Your Own?</h2>
+          </div>
+          <br/>
+          <Link href={'/signup'}>
+            <Button className="bg-pink-500 hover:bg-pink-600 text-white rounded-none border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all font-black uppercase tracking-widest px-10 py-8 text-xl md:text-2xl w-full md:w-auto">
+              Create Cypher Link
+            </Button>
+          </Link>
+        </div>
+
       </div>
     </div>
-    </motion.div>
-    </AuroraBackground>
   )
 }
 

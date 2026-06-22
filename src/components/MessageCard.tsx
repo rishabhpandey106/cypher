@@ -1,13 +1,5 @@
 'use client'
 import React from 'react'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
     AlertDialog,
@@ -27,7 +19,8 @@ import { useToast } from './ui/use-toast'
 import axios from 'axios'
 import { apiResponse } from '@/types/apiResponse'
 import dayjs from 'dayjs';
-import Link from 'next/link';
+import { ShareMessageModal } from './ShareMessageModal';
+
 type MessageCradProps = {
     message: Message,
     onDelete: (messageId: string) => void,
@@ -39,43 +32,51 @@ const MessageCard = ({message , onDelete}: MessageCradProps) => {
         const res = await axios.delete<apiResponse>(`/api/deletemessage/${message._id}`);
         toast({
             title: "Message Deleted",
+            className: "border-4 border-black font-bold uppercase rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-red-400 text-black",
         })
         onDelete(message._id)
     }
+
   return (
-    <Card className="card-bordered">
-      
-        <CardHeader>
-                <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                        <Button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50" variant="destructive"><X className='h-5 w-5'/></Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your
-                            message.
+    <div className="bg-white border-4 border-black p-6 md:p-8 rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col h-full relative">
+        <div className="flex justify-between items-start mb-6">
+            <div className="bg-yellow-400 border-4 border-black px-3 py-1 uppercase font-black text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] -rotate-2">
+                Secret Message
+            </div>
+            <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button className="bg-red-500 hover:bg-red-600 text-white border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all p-2 h-10 w-10">
+                        <X className="h-6 w-6 font-bold" strokeWidth={3} />
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="border-4 border-black rounded-none shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] sm:rounded-none">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="font-black uppercase text-2xl">Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription className="font-bold text-black text-base">
+                            This action cannot be undone. This will permanently delete your message.
                         </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={handleDeleteMessage}>Continue</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            <CardDescription>Cypher - Secret Adventure</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <p className='text-3xl font-semibold'>{message.content}</p>
-        </CardContent>
-        <CardFooter>
-        <div className='flex flex-row justify-between items-center'>
-            <p className='mr-4'>{dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}</p>
-            <Checkbox id="terms1" />
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="sm:space-x-4">
+                        <AlertDialogCancel className="border-4 border-black rounded-none font-bold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all mt-4 sm:mt-0">Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteMessage} className="bg-red-500 hover:bg-red-600 text-white border-4 border-black rounded-none font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
-        </CardFooter>
-    </Card>
+
+        <div className="flex-grow">
+            <p className='text-2xl md:text-3xl font-black uppercase leading-tight mb-8 break-words text-black'>{message.content}</p>
+        </div>
+
+        <div className='flex flex-row justify-between items-end w-full border-t-4 border-black pt-4 mt-auto gap-4'>
+            <p className='text-xs md:text-sm font-bold uppercase text-black bg-pink-300 border-2 border-black px-2 py-1 transform rotate-1 inline-block whitespace-nowrap overflow-hidden text-ellipsis max-w-[50%]'>
+                {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
+            </p>
+            <div className="flex items-center">
+                <ShareMessageModal message={message} />
+            </div>
+        </div>
+    </div>
   )
 }
 

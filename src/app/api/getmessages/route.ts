@@ -23,9 +23,8 @@ export async function GET(req:Request) {
             {$group: {_id: '$_id', messages: {$push: '$messages'}}}
         ]).exec()
         console.log("4");
-        if(!user){
-            return Response.json({message: "User not found", success: false},{status: 400})
-            console.log("6");
+        if(!user || user.length === 0){
+            return Response.json({messages: [], success: true},{status: 200})
         }
         console.log("5");
         console.log(user[0].messages)

@@ -5,6 +5,7 @@ import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 
 export async function POST(req: Request)
 {
+    // console.log("Signup API called");
     await dbConnect();
 
     try {
@@ -54,8 +55,10 @@ export async function POST(req: Request)
                 isAccepting: true,
                 messages: []
             })
-
+            // console.log("Before save");
             await newData.save();
+            // console.log("After save");
+            // console.log("User saved:", newData);
 
         }
 

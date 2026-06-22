@@ -15,49 +15,165 @@ interface VerificationEmailProps {
   otp: string;
 }
 
-export default function VerificationEmail({ username, otp }: VerificationEmailProps) {
+export default function VerificationEmail({
+  username,
+  otp,
+}: VerificationEmailProps) {
   return (
-    <Html lang="en" dir="ltr">
+    <Html lang="en">
       <Head>
-        <title>Verification Code</title>
+        <title>Verify Your Account</title>
+
         <Font
-          fontFamily="Roboto"
-          fallbackFontFamily="Verdana"
+          fontFamily="Inter"
+          fallbackFontFamily="Arial"
           webFont={{
-            url: 'https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2',
+            url: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTcviYwY.woff2',
             format: 'woff2',
           }}
           fontWeight={400}
           fontStyle="normal"
         />
       </Head>
-      <Preview>Here&apos;s your verification code: {otp}</Preview>
-      <Section>
-        <Row>
-          <Heading as="h2">Hello {username},</Heading>
-        </Row>
-        <Row>
-          <Text>
-            Thank you for registering. Please use the following verification
-            code to complete your registration:
-          </Text>
-        </Row>
-        <Row>
-          <Text>{otp}</Text> 
-        </Row>
-        <Row>
-          <Text>
-            If you did not request this code, please ignore this email.
-          </Text>
-        </Row>
-        <Row>
-          <Button
-            href={`http://localhost:3000/verify/${username}`}
-            style={{ color: '#61dafb' }}
+
+      <Preview>Your verification code is {otp}</Preview>
+
+      <Section
+        style={{
+          backgroundColor: '#f5f5f5',
+          padding: '48px 24px',
+        }}
+      >
+        <Section
+          style={{
+            maxWidth: '600px',
+            margin: '0 auto',
+            backgroundColor: '#ffffff',
+            border: '4px solid #000',
+            padding: '40px',
+          }}
+        >
+          <Text
+            style={{
+              margin: 0,
+              fontSize: '12px',
+              fontWeight: 700,
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+            }}
           >
-            Verify here
+            ACCOUNT VERIFICATION
+          </Text>
+
+          <Heading
+            style={{
+              fontSize: '40px',
+              lineHeight: 1,
+              fontWeight: 900,
+              color: '#000',
+              margin: '16px 0 24px',
+            }}
+          >
+            Verify your account.
+          </Heading>
+
+          <Text
+            style={{
+              fontSize: '18px',
+              color: '#111',
+              marginBottom: '24px',
+            }}
+          >
+            Hey <strong>{username}</strong>,
+          </Text>
+
+          <Text
+            style={{
+              fontSize: '16px',
+              lineHeight: '28px',
+              color: '#333',
+            }}
+          >
+            Use the verification code below to complete your signup.
+          </Text>
+
+          {/* OTP BLOCK */}
+          <Section
+            style={{
+              border: '4px solid #000',
+              backgroundColor: '#fff200',
+              margin: '32px 0',
+              padding: '24px',
+              textAlign: 'center',
+            }}
+          >
+            <Text
+              style={{
+                margin: 0,
+                fontSize: '42px',
+                fontWeight: 900,
+                letterSpacing: '10px',
+                color: '#000',
+              }}
+            >
+              {otp}
+            </Text>
+          </Section>
+
+          <Button
+            href={`https://yourdomain.com/verify/${username}`}
+            style={{
+              backgroundColor: '#000',
+              color: '#fff',
+              padding: '16px 32px',
+              fontWeight: 700,
+              border: '3px solid #000',
+              textDecoration: 'none',
+              display: 'inline-block',
+            }}
+          >
+            Verify Account →
           </Button>
-        </Row>
+
+          <Text
+            style={{
+              marginTop: '32px',
+              fontSize: '14px',
+              color: '#666',
+              lineHeight: '24px',
+            }}
+          >
+            This code expires in 10 minutes.
+          </Text>
+
+          <Text
+            style={{
+              fontSize: '14px',
+              color: '#666',
+              lineHeight: '24px',
+            }}
+          >
+            If you didn't request this email, you can safely ignore it.
+          </Text>
+
+          <Section
+            style={{
+              marginTop: '40px',
+              borderTop: '2px solid #000',
+              paddingTop: '20px',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: '12px',
+                color: '#666',
+                margin: 0,
+              }}
+            >
+              © 2026 Cypher. All rights reserved.
+            </Text>
+          </Section>
+        </Section>
       </Section>
     </Html>
   );

@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Loader2, LoaderCircle } from "lucide-react"
-import { BackgroundBeams } from "@/components/ui/background-beams"
 
 const SignupPage = () => {
 
@@ -50,7 +49,6 @@ const SignupPage = () => {
         setIsCheckingUsername(true);
         setUsernameMessage('');
       }
-      console.log(username);
       try {
         const res = await axios.get<apiResponse>(`/api/uniqueusername?username=${username}`)
         setUsernameMessage(res.data.message);
@@ -69,32 +67,38 @@ const SignupPage = () => {
     setIsSubmitting(true);
     try {
       const res = await axios.post<apiResponse>("/api/signup", data);
-      console.log(res.data);
       toast({
         title: "Success",
-        description: res.data.message
+        description: res.data.message,
+        className: "border-4 border-black font-bold uppercase rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-green-400 text-black",
       });
       router.replace(`/verify/${username}`);
       setIsSubmitting(false);
     } catch (error) {
-      console.log("Error while signing up", error);
       const axiosError = error as AxiosError<apiResponse>
       let errormsg = axiosError.response?.data.message
       toast({
         title: "Error",
         description: errormsg,
-        variant: "destructive"
+        className: "border-4 border-black font-bold uppercase rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-red-400 text-black",
       })
       setIsSubmitting(false);
     }
   }
 
   return (
-    <div className="flex relative justify-center items-center min-h-screen">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md relative z-10">
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">Join Cypher</h1>
-          <p className="mb-4">Signup to start your secret adventure</p>
+    <div className="flex relative justify-center items-center min-h-screen bg-green-400 selection:bg-pink-400 selection:text-black overflow-hidden py-12 px-4">
+      
+      {/* Decorative Blocks */}
+      <div className="absolute top-10 left-20 w-48 h-48 bg-pink-500 border-4 border-black rotate-6 z-0 hidden lg:block"></div>
+      <div className="absolute bottom-10 right-20 w-40 h-40 bg-purple-500 border-4 border-black -rotate-12 z-0 hidden lg:block"></div>
+
+      <div className="w-full max-w-md p-8 bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-none relative z-10">
+        <div className="text-center mb-8 border-b-4 border-black pb-6">
+          <h1 className="text-5xl font-black uppercase tracking-tighter mb-4 text-black transform rotate-1 inline-block bg-yellow-400 px-2 py-1 border-2 border-black">
+            Join Cypher
+          </h1>
+          <p className="text-xl font-bold uppercase tracking-tight text-gray-700">Signup for a secret adventure</p>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -103,26 +107,32 @@ const SignupPage = () => {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel className="text-xl font-black uppercase text-black">Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="username" {...field}
-                    onChange={(e) => {
-                      field.onChange(e)
-                      debouncedUsername(e.target.value)
-                    }} />
+                    <Input 
+                      placeholder="USERNAME" 
+                      className="border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold text-lg p-6 uppercase placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-blue-500 focus-visible:shadow-[8px_8px_0px_0px_rgba(59,130,246,1)] transition-all"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e)
+                        debouncedUsername(e.target.value)
+                      }} 
+                    />
                   </FormControl>
-                  {
-                    isCheckingUsername && <Loader2 className="animate-spin"/>
-                  }
-                  {!isCheckingUsername && usernameMessage && (
-                    <p className={`text-sm ${
-                            usernameMessage === 'Username is available'
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        }`}> {usernameMessage} 
-                    </p>
-                  )}
-                  <FormMessage />
+                  <div className="flex items-center gap-2 mt-2">
+                    {
+                      isCheckingUsername && <Loader2 className="animate-spin h-5 w-5 text-black"/>
+                    }
+                    {!isCheckingUsername && usernameMessage && (
+                      <p className={`text-sm font-bold uppercase px-2 py-1 border-2 border-black inline-block ${
+                              usernameMessage === 'Username is available'
+                              ? 'bg-green-300 text-black'
+                              : 'bg-red-300 text-black'
+                          }`}> {usernameMessage} 
+                      </p>
+                    )}
+                  </div>
+                  <FormMessage className="font-bold uppercase text-red-500" />
                 </FormItem>
               )}
             />
@@ -131,11 +141,15 @@ const SignupPage = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-xl font-black uppercase text-black">Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="email" {...field} />
+                    <Input 
+                      placeholder="EMAIL" 
+                      className="border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold text-lg p-6 uppercase placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-blue-500 focus-visible:shadow-[8px_8px_0px_0px_rgba(59,130,246,1)] transition-all"
+                      {...field} 
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="font-bold uppercase text-red-500" />
                 </FormItem>
               )}
             />
@@ -144,34 +158,42 @@ const SignupPage = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-xl font-black uppercase text-black">Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="password" {...field} />
+                    <Input 
+                      type="password" 
+                      placeholder="PASSWORD" 
+                      className="border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold text-lg p-6 uppercase placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-blue-500 focus-visible:shadow-[8px_8px_0px_0px_rgba(59,130,246,1)] transition-all"
+                      {...field} 
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="font-bold uppercase text-red-500" />
                 </FormItem>
               )}
             />
-            <Button disabled={isSubmitting} type="submit">
+            <Button 
+              disabled={isSubmitting} 
+              type="submit"
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-black uppercase tracking-widest px-8 py-8 text-2xl mt-4"
+            >
               {
                 isSubmitting ? (
                   <>
-                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin"/>
-                  Please Wait
+                  <LoaderCircle className="mr-2 h-6 w-6 animate-spin"/>
+                  PLEASE WAIT
                   </>
-                ) : ('SignUp')
+                ) : ('SIGN UP')
               }
             </Button>
           </form>
       </Form>
-      <div className="text-center mt-4 relative z-10">
-        <p>
+      <div className="text-center mt-8 pt-6 border-t-4 border-black relative z-10">
+        <p className="text-lg font-bold uppercase text-black">
           Already have an account?{' '}
-          <Link href="/signin" className="text-blue-600 hover:text-blue-800">SignIn</Link>
+          <Link href="/signin" className="text-blue-600 hover:text-blue-800 hover:bg-blue-200 px-1 border-b-4 border-transparent hover:border-black transition-all">SignIn</Link>
         </p>
       </div>
       </div>
-      <BackgroundBeams />
     </div>
   )
 }
