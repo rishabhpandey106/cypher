@@ -182,7 +182,7 @@ const CARDS = [
     designation: "Senior Shitposter",
     content: (
       <p>
-        I probably would've been <Highlight>6'5''</Highlight> , if my siblings did not walk over me as a child.
+        I probably would&apos;ve been <Highlight>6&apos;5&apos;&apos;</Highlight> , if my siblings did not walk over me as a child.
       </p>
     ),
   },
