@@ -110,7 +110,7 @@ function Dashboard() {
 
   const username = session?.user.username
   console.log(username)
-  const baseUrl = `https://cypher.itsrshabh.tech`;
+  const baseUrl = `https://cypher.itsrishabh.tech`;
   const url = `${baseUrl}/u/${username}`;
 
   const copyToClipboard = async () => {
