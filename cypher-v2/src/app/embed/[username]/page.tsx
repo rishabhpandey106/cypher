@@ -65,7 +65,7 @@ const EmbedProfile = () => {
       <style dangerouslySetInnerHTML={{ __html: `body { background-color: transparent !important; }` }} />
       <div className="min-h-screen bg-transparent p-4 font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center">
         <div className="w-full max-w-sm">
-          <div className="bg-blue-200 border-4 border-black p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-none">
+          <div className="bg-white border-4 border-black p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-none">
             <h1 className="text-2xl font-black uppercase tracking-tighter text-black mb-4 leading-tight text-center">
               Ask <span className="bg-pink-500 text-white px-1">@{username}</span>
             </h1>
