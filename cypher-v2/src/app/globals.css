@@ -149,3 +149,18 @@
     @apply font-sans;
   }
 }
+
+/* Chrome, Safari, Edge */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* IE and old Edge */
+* {
+  -ms-overflow-style: none;
+}
