@@ -38,10 +38,10 @@ const MessageCard = ({message , onDelete}: MessageCradProps) => {
     }
 
   return (
-    <div className="bg-white border-4 border-black p-6 md:p-8 rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col h-full relative">
+    <div className={`border-4 border-black p-6 md:p-8 rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col h-full relative ${message.isBoosted ? 'bg-pink-300' : 'bg-white'}`}>
         <div className="flex justify-between items-start mb-6">
-            <div className="bg-yellow-400 border-4 border-black px-3 py-1 uppercase font-black text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] -rotate-2">
-                Secret Message
+            <div className={`${message.isBoosted ? 'bg-black text-yellow-400' : 'bg-yellow-400 text-black'} border-4 border-black px-3 py-1 uppercase font-black text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] -rotate-2 flex items-center gap-2`}>
+                {message.isBoosted ? '⚡ BOOSTED' : 'Secret Message'}
             </div>
             <AlertDialog>
                 <AlertDialogTrigger render={

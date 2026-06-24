@@ -33,6 +33,7 @@ const initialMessageString =
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isBoosted, setIsBoosted] = useState(false);
   const params = useParams<{ username: string }>();
   const username = params.username;
   const {toast} = useToast();
@@ -68,22 +69,35 @@ const Profile = () => {
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {
     setIsLoading(true);
     try {
-      const response = await axios.post<apiResponse>('/api/sendmessage', {
-        username,
-        ...data,
-      });
+      if (isBoosted) {
+        const response = await axios.post('/api/payments/checkout', {
+          username,
+          content: data.content,
+          amount: 100 // Static boost amount (₹100)
+        });
+        
+        if (response.data.checkout_url) {
+          window.location.href = response.data.checkout_url;
+          return;
+        }
+      } else {
+        const response = await axios.post<apiResponse>('/api/sendmessage', {
+          username,
+          ...data,
+        });
 
-      toast({
-        title: response.data.message,
-        variant: 'default',
-      });
-      form.reset({ ...form.getValues(), content: '' });
+        toast({
+          title: response.data.message,
+          variant: 'default',
+        });
+        form.reset({ ...form.getValues(), content: '' });
+      }
     } catch (error) {
       const axiosError = error as AxiosError<apiResponse>;
       toast({
         title: 'Error',
         description:
-          axiosError.response?.data.message ?? 'Failed to sent message',
+          axiosError.response?.data?.message ?? 'Failed to sent message',
         variant: 'destructive',
       });
     } finally {
@@ -124,6 +138,25 @@ const Profile = () => {
                   </FormItem>
                 )}
               />
+
+              <div className="flex flex-col md:flex-row items-center justify-between border-4 border-black p-4 bg-green-300 gap-4 transition-all hover:translate-x-[2px] hover:translate-y-[2px] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none">
+                <div className="flex items-center gap-3 w-full">
+                  <input 
+                    type="checkbox" 
+                    id="boost-toggle"
+                    checked={isBoosted}
+                    onChange={(e) => setIsBoosted(e.target.checked)}
+                    className="w-8 h-8 border-4 border-black rounded-none appearance-none cursor-pointer bg-white checked:bg-black checked:after:content-['⚡'] checked:after:text-yellow-400 checked:after:flex checked:after:justify-center checked:after:items-center checked:after:text-xl transition-all"
+                  />
+                  <label htmlFor="boost-toggle" className="font-black uppercase text-lg md:text-xl cursor-pointer flex-1">
+                    ⚡ CypherBoost (₹100)
+                  </label>
+                </div>
+                <div className="text-sm font-bold uppercase w-full md:w-auto text-left md:text-right border-t-4 border-black pt-2 md:border-none md:pt-0">
+                  Guarantee they see it!
+                </div>
+              </div>
+
               <div className="flex justify-end">
                 {isLoading ? (
                   <Button disabled className="bg-black text-white rounded-none border-4 border-black font-black uppercase tracking-widest px-8 py-6 text-lg w-full md:w-auto">
@@ -131,8 +164,8 @@ const Profile = () => {
                     SENDING...
                   </Button>
                 ) : (
-                  <Button type="submit" disabled={isLoading || !messageContent} className="bg-blue-500 hover:bg-blue-600 text-white rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-black uppercase tracking-widest px-8 py-6 text-lg w-full md:w-auto">
-                    <Send className="mr-2 h-6 w-6" strokeWidth={3} /> SEND IT
+                  <Button type="submit" disabled={isLoading || !messageContent} className={`${isBoosted ? 'bg-pink-500 hover:bg-pink-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-black uppercase tracking-widest px-8 py-6 text-lg w-full md:w-auto`}>
+                    <Send className="mr-2 h-6 w-6" strokeWidth={3} /> {isBoosted ? 'BOOST IT' : 'SEND IT'}
                   </Button>
                 )}
               </div>

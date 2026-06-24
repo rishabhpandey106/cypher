@@ -3,6 +3,8 @@ import mongoose , {Schema , Document, Mongoose} from "mongoose";
 export interface Message extends Document {
     content: string;
     createdAt: Date;
+    isBoosted?: boolean;
+    amount?: number;
 }
 
 const MessageSchema: Schema<Message> = new Schema({
@@ -14,6 +16,14 @@ const MessageSchema: Schema<Message> = new Schema({
         type: Date,
         required: true,
         default: Date.now
+    },
+    isBoosted: {
+        type: Boolean,
+        default: false
+    },
+    amount: {
+        type: Number,
+        default: 0
     }
 })
 
@@ -25,6 +35,7 @@ export interface User extends Document {
     verifyCodeExpiry: Date;
     isVerified: boolean;
     isAccepting: boolean;
+    walletBalance: number;
     messages: Message[]
 }
 
@@ -58,6 +69,10 @@ const UserSchema: Schema<User> = new Schema({
     isAccepting: {
         type: Boolean,
         default: true,
+    },
+    walletBalance: {
+        type: Number,
+        default: 0,
     },
     messages: [MessageSchema]
 })

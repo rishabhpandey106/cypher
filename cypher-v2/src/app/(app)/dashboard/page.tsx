@@ -20,6 +20,7 @@ function Dashboard() {
   const [switchLoading, setSwitchLoading] = useState(false)
   const [viewDate, setViewDate] = useState(dayjs())
   const [showEmbed, setShowEmbed] = useState(false)
+  const [walletBalance, setWalletBalance] = useState(0)
 
   const { toast } = useToast();
 
@@ -63,7 +64,17 @@ function Dashboard() {
     try {
       const res = await axios.get<apiResponse>("/api/getmessages");
       console.log(res.data.messages)
-      setMessages(res.data.messages || [])
+      // Sort messages: Boosted messages first, then chronologically
+      const fetchedMessages = res.data.messages || [];
+      fetchedMessages.sort((a: any, b: any) => {
+        if (a.isBoosted && !b.isBoosted) return -1;
+        if (!a.isBoosted && b.isBoosted) return 1;
+        return 0; // maintain default date sort from backend
+      });
+      setMessages(fetchedMessages)
+      
+      // We need to type-cast res.data to include walletBalance since apiResponse type might not have it yet
+      setWalletBalance((res.data as any).walletBalance || 0)
 
       if (refresh) {
         toast({
@@ -169,9 +180,17 @@ function Dashboard() {
 
         {/* Header Section */}
         <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-none mb-12">
-          <h1 className="text-5xl md:text-6xl font-black uppercase tracking-tighter text-black mb-8 break-words leading-none">
-            USER <span className="bg-yellow-400 text-black px-2 inline-block transform -rotate-1">DASHBOARD</span>
-          </h1>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
+            <h1 className="text-5xl md:text-6xl font-black uppercase tracking-tighter text-black break-words leading-none">
+              USER <span className="bg-yellow-400 text-black px-2 inline-block transform -rotate-1">DASHBOARD</span>
+            </h1>
+
+            <div className="bg-green-300 border-4 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center transform rotate-1 min-w-[200px]">
+              <div className="text-sm font-bold uppercase tracking-wider mb-1">Virtual Wallet</div>
+              <div className="text-4xl font-black">₹{walletBalance}</div>
+              <div className="text-xs font-bold uppercase mt-1">End of month payout</div>
+            </div>
+          </div>
 
           <div className="mb-8">
             <h2 className="text-2xl font-black uppercase mb-4 tracking-tight">Copy Your Unique Link</h2>
