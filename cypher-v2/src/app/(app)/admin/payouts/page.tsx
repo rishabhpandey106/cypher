@@ -68,7 +68,7 @@ export default function AdminPayouts() {
                   </div>
                   <div className="flex items-center gap-6 mt-4 md:mt-0">
                     <div className="text-3xl font-black bg-white border-4 border-black px-4 py-2">
-                      ₹{user.walletBalance}
+                      ₹{Number(user.walletBalance).toFixed(2)}
                     </div>
                     <Button 
                       onClick={() => handleReset(user.username)}

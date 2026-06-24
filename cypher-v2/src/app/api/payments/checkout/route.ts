@@ -33,6 +33,11 @@ export async function POST(request: NextRequest) {
 
     const productId = process.env.DODO_PRODUCT_ID || "prod_PLACEHOLDER";
 
+    // Dynamically get the domain so it works perfectly on localhost and Vercel without env vars
+    const host = request.headers.get('host') || 'localhost:3000';
+    const protocol = request.headers.get('x-forwarded-proto') || (host.includes('localhost') ? 'http' : 'https');
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${host}`;
+
     // We omit 'amount' here so Dodo uses the Product's default pricing
     // If the Product is set to "Pay What You Want" in the dashboard, 
     // it will let the user type the amount!
@@ -43,7 +48,7 @@ export async function POST(request: NextRequest) {
           quantity: 1
         }
       ],
-      return_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/u/${username}?payment_success=true`,
+      return_url: `${baseUrl}/u/${username}?payment_success=true`,
       metadata: metadata, // Pass metadata securely
     });
 

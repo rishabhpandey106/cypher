@@ -186,8 +186,8 @@ function Dashboard() {
             </h1>
 
             <div className="bg-green-300 border-4 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center transform rotate-1 min-w-[200px]">
-              <div className="text-sm font-bold uppercase tracking-wider mb-1">Virtual Wallet</div>
-              <div className="text-4xl font-black">₹{walletBalance}</div>
+              <div className="text-sm font-bold text-gray-800 uppercase tracking-widest mb-1">Creator Earnings</div>
+              <div className="text-4xl font-black">₹{Number(walletBalance).toFixed(2)}</div>
               <div className="text-xs font-bold uppercase mt-1">End of month payout</div>
             </div>
           </div>
