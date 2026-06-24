@@ -3,16 +3,17 @@ import DodoPayments from 'dodopayments';
 import UserModel from '@/models/User';
 import dbConnect from '@/utils/dbConfig';
 
-// Initialize Dodo client (Ensure DODO_PAYMENT_TEST_KEY is in .env)
+// Initialize Dodo client
+// To go live: Change DODO_ENVIRONMENT to 'live_mode' and use your Live API Key
 const client = new DodoPayments({
-  bearerToken: process.env.DODO_PAYMENT_TEST_KEY,
-  environment: 'test_mode',
+  bearerToken: process.env.DODO_PAYMENT_KEY || process.env.DODO_PAYMENT_TEST_KEY || '',
+  environment: (process.env.DODO_ENVIRONMENT as 'live_mode' | 'test_mode') || 'test_mode',
 });
 
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
-    const { username, content, amount } = await request.json();
+    const { username, content, amount, return_url } = await request.json();
 
     if (!username || !content || !amount) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
           quantity: 1
         }
       ],
-      return_url: `${baseUrl}/u/${username}?payment_success=true`,
+      return_url: return_url || `${baseUrl}/u/${username}`,
       metadata: metadata, // Pass metadata securely
     });
 
@@ -58,7 +59,22 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Dodo Payments Error:', error);
-    return NextResponse.json({ success: false, message: error.message || 'Payment initiation failed' }, { status: 500 });
+    console.error('Checkout API Error:', error);
+
+    // Advanced debugging for 401 Unauthorized errors
+    const isLiveKey = !!process.env.DODO_PAYMENT_KEY;
+    const isTestKey = !!process.env.DODO_PAYMENT_TEST_KEY;
+    const environmentConfig = (process.env.DODO_ENVIRONMENT as 'live_mode' | 'test_mode') || 'test_mode';
+
+    return NextResponse.json({ 
+      success: false, 
+      message: error.message || 'Internal Server Error',
+      diagnostic_info: {
+        using_live_key: isLiveKey,
+        using_test_key: isTestKey,
+        environment: environmentConfig,
+        hint: "If you are getting a 401 Unauthorized, it means your API key does not match the environment. For example, passing a Live Key when environment is 'test_mode', or passing a Test Key when environment is 'live_mode'."
+      }
+    }, { status: 500 });
   }
 }

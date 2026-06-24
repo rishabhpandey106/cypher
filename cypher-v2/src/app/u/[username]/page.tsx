@@ -1,7 +1,7 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { useToast } from '@/components/ui/use-toast'
 import { useCompletion } from "ai/react"
@@ -35,8 +35,31 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isBoosted, setIsBoosted] = useState(false);
   const params = useParams<{ username: string }>();
+  const searchParams = useSearchParams();
   const username = params.username;
   const {toast} = useToast();
+
+  useEffect(() => {
+    if (searchParams.get('status') === 'succeeded') {
+      // Delay the toast slightly to ensure Shadcn UI Toaster is fully mounted after redirect
+      setTimeout(() => {
+        toast({
+          title: "Payment Successful!",
+          description: "Your boosted message has been sent successfully. ⚡",
+          className: "border-4 border-black font-bold uppercase rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-green-300 text-black",
+        });
+      }, 300);
+      
+      // Optional: Clean up the URL to remove the query parameters
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('status');
+        url.searchParams.delete('payment_id');
+        url.searchParams.delete('email');
+        window.history.replaceState({}, document.title, url.toString());
+      }
+    }
+  }, [searchParams, toast]);
 
   const {
     complete,
@@ -149,7 +172,7 @@ const Profile = () => {
                     className="w-8 h-8 border-4 border-black rounded-none appearance-none cursor-pointer bg-white checked:bg-black checked:after:content-['⚡'] checked:after:text-yellow-400 checked:after:flex checked:after:justify-center checked:after:items-center checked:after:text-xl transition-all"
                   />
                   <label htmlFor="boost-toggle" className="font-black uppercase text-lg md:text-xl cursor-pointer flex-1">
-                    ⚡ CypherBoost (₹100)
+                     CypherBoost
                   </label>
                 </div>
                 <div className="text-sm font-bold uppercase w-full md:w-auto text-left md:text-right border-t-4 border-black pt-2 md:border-none md:pt-0">

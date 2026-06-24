@@ -12,6 +12,7 @@ import { Message } from '@/models/User'
 import * as htmlToImage from 'html-to-image';
 import { Share2, Download, Code } from 'lucide-react'
 import { useToast } from './ui/use-toast'
+import axios from 'axios'
 
 export function ShareMessageModal({ message }: { message: Message }) {
   const cardRef = useRef<HTMLDivElement>(null)
@@ -47,8 +48,37 @@ export function ShareMessageModal({ message }: { message: Message }) {
     }
   }
 
-  const handleCopyHTML = () => {
-    const url = `${baseUrl}/embed/card?q=${encodeURIComponent(message.content)}${answer ? `&a=${encodeURIComponent(answer)}` : ''}`;
+  const [isGeneratingEmbed, setIsGeneratingEmbed] = useState(false);
+
+  const getSecureEmbedUrl = async () => {
+    let url = `${baseUrl}/embed/card?q=${encodeURIComponent(message.content)}${answer ? `&a=${encodeURIComponent(answer)}` : ''}`;
+    
+    if (message.isBoosted) {
+      try {
+        const response = await axios.post('/api/sign-embed', {
+          q: message.content,
+          a: answer,
+          b: 100 // Hardcoded amount for now based on current logic
+        });
+        if (response.data.signature) {
+          url += `&b=100&sig=${response.data.signature}`;
+        }
+      } catch (err) {
+        console.error("Failed to sign embed", err);
+        toast({ title: "Failed to generate secure embed", variant: "destructive" });
+        return null;
+      }
+    }
+    return url;
+  };
+
+  const handleCopyHTML = async () => {
+    setIsGeneratingEmbed(true);
+    const url = await getSecureEmbedUrl();
+    setIsGeneratingEmbed(false);
+    
+    if (!url) return;
+
     navigator.clipboard.writeText(`<iframe src="${url}" width="100%" height="220" style="border:none; border-radius: 0px; background: transparent;"></iframe>`);
     toast({
       title: "HTML Copied!",
@@ -58,8 +88,13 @@ export function ShareMessageModal({ message }: { message: Message }) {
     setShowEmbedOptions(false);
   }
 
-  const handleCopyReact = () => {
-    const url = `${baseUrl}/embed/card?q=${encodeURIComponent(message.content)}${answer ? `&a=${encodeURIComponent(answer)}` : ''}`;
+  const handleCopyReact = async () => {
+    setIsGeneratingEmbed(true);
+    const url = await getSecureEmbedUrl();
+    setIsGeneratingEmbed(false);
+    
+    if (!url) return;
+
     navigator.clipboard.writeText(`<iframe src="${url}" width="100%" height={220} style={{ border: 'none', borderRadius: '0px', background: 'transparent' }} />`);
     toast({
       title: "React Code Copied!",
