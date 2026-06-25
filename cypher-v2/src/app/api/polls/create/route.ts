@@ -9,7 +9,7 @@ export async function POST(req: Request){
     const session = await getServerSession(authOptions);
     const user = session?.user;
 
-    if(!session || !session.user){
+    if(!session || !user){
         return res.json({message: "User not authenticated", success: false},{status: 400});
     }
 
