@@ -136,8 +136,15 @@ const Profile = () => {
 
       <div className="w-full max-w-2xl relative z-10">
         
+        {/* Temporary KYC Banner */}
+        <div className="bg-red-500 text-white border-4 border-black p-4 mb-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center transform -rotate-1 hover:rotate-0 transition-transform">
+          <p className="font-black uppercase tracking-wide text-sm md:text-base">
+            ⚠️ Premium Boosting is temporarily paused for merchant verification. Free messages are still active!
+          </p>
+        </div>
+
         {/* Main Card */}
-        <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-none mb-12 mt-8 md:mt-0">
+        <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-none mb-12 mt-4 md:mt-0">
           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-8 leading-tight">
             Send Anonymous Message To <br/><span className="bg-pink-500 text-white px-2 inline-block transform -rotate-2 mt-2 break-all">@{username}</span>
           </h1>
@@ -164,15 +171,16 @@ const Profile = () => {
 
               <div className="flex flex-col md:flex-row items-center justify-between border-4 border-black p-4 bg-green-300 gap-4 transition-all hover:translate-x-[2px] hover:translate-y-[2px] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none">
                 <div className="flex items-center gap-3 w-full">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     id="boost-toggle"
                     checked={isBoosted}
+                    disabled={true}
                     onChange={(e) => setIsBoosted(e.target.checked)}
-                    className="w-8 h-8 border-4 border-black rounded-none appearance-none cursor-pointer bg-white checked:bg-black checked:after:content-['⚡'] checked:after:text-yellow-400 checked:after:flex checked:after:justify-center checked:after:items-center checked:after:text-xl transition-all"
+                    className="w-8 h-8 border-4 border-black rounded-none appearance-none cursor-not-allowed bg-gray-200 checked:bg-black checked:after:content-['⚡'] checked:after:text-yellow-400 checked:after:flex checked:after:justify-center checked:after:items-center checked:after:text-xl transition-all opacity-50"
                   />
-                  <label htmlFor="boost-toggle" className="font-black uppercase text-lg md:text-xl cursor-pointer flex-1">
-                     CypherBoost
+                  <label htmlFor="boost-toggle" className="font-black uppercase text-lg md:text-xl cursor-not-allowed flex-1 text-gray-500">
+                    ⚡ CypherBoost (Paused)
                   </label>
                 </div>
                 <div className="text-sm font-bold uppercase w-full md:w-auto text-left md:text-right border-t-4 border-black pt-2 md:border-none md:pt-0">

@@ -254,7 +254,7 @@ function Dashboard() {
               <div className="flex flex-col md:flex-row items-stretch gap-4">
                 <input
                   type="text"
-                  value={`<iframe src="${baseUrl}/embed/${username}?return_url=YOUR_WEBSITE_URL" width="100%" height="450" style="border:none; border-radius: 0px; background: transparent;"></iframe>`}
+                  value={`<iframe src="${baseUrl}/embed/${username}?return_url=YOUR_WEBSITE_URL" width="100%" height="540" style="border:none; border-radius: 0px; background: transparent;"></iframe>`}
                   disabled
                   className="w-full p-4 border-4 border-black rounded-none text-lg font-bold bg-white text-gray-600 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-mono text-sm"
                 />

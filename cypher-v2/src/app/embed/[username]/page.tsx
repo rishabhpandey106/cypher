@@ -110,10 +110,20 @@ const EmbedProfile = () => {
       <style dangerouslySetInnerHTML={{ __html: `body { background-color: transparent !important; }` }} />
       <div className="min-h-screen bg-transparent p-4 font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center">
         <div className="w-full max-w-sm">
-          <div className="bg-white border-4 border-black p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-none">
-            <h1 className="text-2xl font-black uppercase tracking-tighter text-black mb-4 leading-tight text-center">
-              Ask <span className="bg-pink-500 text-white px-1">@{username}</span>
-            </h1>
+          {/* Temporary KYC Banner */}
+          <div className="bg-red-500 text-white border-4 border-black p-3 mb-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center transform -rotate-1 hover:rotate-0 transition-transform">
+            <p className="font-black uppercase tracking-wide text-xs">
+              ⚠️ Boost is temporarily paused for verification. Free messages work normally!
+            </p>
+          </div>
+
+          <div className="bg-white border-4 border-black p-4 sm:p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative z-10 w-full rounded-none">
+            <div className="text-center mb-6">
+              <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter text-black leading-tight">
+                SEND ANONYMOUS MESSAGE TO <br/>
+                <span className="bg-pink-500 text-white px-2 mt-2 inline-block transform -rotate-2 break-all">@{username}</span>
+              </h1>
+            </div>
             
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -122,30 +132,17 @@ const EmbedProfile = () => {
                   name="content"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="sr-only">Message</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="TYPE SECRET MESSAGE..."
-                          className="resize-none h-24 border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-shadow text-base font-bold p-3 uppercase placeholder:text-gray-400"
+                          placeholder="Type your secret message..."
+                          className="resize-none border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0 focus-visible:ring-offset-0 focus:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-shadow min-h-[120px] text-base font-bold p-4 bg-yellow-50"
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage className="font-bold uppercase text-xs" />
+                      <FormMessage className="text-red-600 font-bold uppercase text-xs border-2 border-red-600 bg-red-100 p-1 inline-block" />
                     </FormItem>
                   )}
                 />
-
-                <div className="flex items-center justify-between border-4 border-black bg-pink-100 p-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mt-4">
-                  <div className="flex items-center space-x-2">
-                    <Zap className="h-5 w-5 text-pink-600 fill-pink-600" />
-                    <span className="font-black uppercase text-sm">Boost Message</span>
-                  </div>
-                  <Switch
-                    checked={isBoosted}
-                    onCheckedChange={setIsBoosted}
-                    className="data-[state=checked]:bg-pink-600"
-                  />
-                </div>
 
                 <div className="flex justify-end pt-2">
                   {isLoading ? (
