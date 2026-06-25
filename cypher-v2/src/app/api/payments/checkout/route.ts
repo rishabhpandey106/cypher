@@ -13,26 +13,50 @@ const client = new DodoPayments({
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
-    const { username, content, amount, return_url } = await request.json();
+    const { username, content, amount, return_url, pollId, optionId, expectedVotes } = await request.json();
 
-    if (!username || !content || !amount) {
-      return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+    if (!amount) {
+      return NextResponse.json({ message: 'Missing amount' }, { status: 400 });
     }
 
-    // Verify user exists
-    const user = await UserModel.findOne({ username, isAccepting: true });
-    if (!user) {
-      return NextResponse.json({ message: 'User not found or not accepting messages' }, { status: 404 });
+    if (!pollId && (!username || !content)) {
+      return NextResponse.json({ message: 'Missing required fields for message boost' }, { status: 400 });
     }
 
-    // Metadata payload to pass to the webhook so we know WHAT message to save later!
-    const metadata = {
-      username: username,
-      content: content,
+    if (pollId && !optionId) {
+      return NextResponse.json({ message: 'Missing optionId for poll boost' }, { status: 400 });
+    }
+
+    if (!pollId) {
+      // Verify user exists for message boost
+      const user = await UserModel.findOne({ username, isAccepting: true });
+      if (!user) {
+        return NextResponse.json({ message: 'User not found or not accepting messages' }, { status: 404 });
+      }
+    }
+
+    // Metadata payload to pass to the webhook
+    const metadata: Record<string, string> = {
       amount: amount.toString()
     };
+    if (pollId) {
+      metadata.pollId = pollId;
+      metadata.optionId = optionId;
+      if (expectedVotes) {
+        metadata.expectedVotes = expectedVotes.toString();
+      }
+    } else {
+      metadata.username = username;
+      metadata.content = content;
+    }
 
-    const productId = process.env.DODO_PRODUCT_ID || "prod_PLACEHOLDER";
+    const productId = pollId 
+      ? process.env.DODO_PRODUCT_ID_2 
+      : process.env.DODO_PRODUCT_ID;
+
+    if (!productId) {
+      return NextResponse.json({ message: 'Product ID configuration missing' }, { status: 500 });
+    }
 
     // Dynamically get the domain so it works perfectly on localhost and Vercel without env vars
     const host = request.headers.get('host') || 'localhost:3000';
@@ -49,7 +73,7 @@ export async function POST(request: NextRequest) {
           quantity: 1
         }
       ],
-      return_url: return_url || `${baseUrl}/u/${username}`,
+      return_url: return_url || (pollId ? `${baseUrl}/poll/${pollId}` : `${baseUrl}/u/${username}`),
       metadata: metadata, // Pass metadata securely
     });
 

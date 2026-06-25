@@ -1,6 +1,7 @@
 'use client'
 import MessageCard from '@/components/MessageCard'
 import { Button } from '@/components/ui/button'
+import PollsDashboard from '@/components/PollsDashboard'
 import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
 import { Message } from '@/models/User'
@@ -20,6 +21,7 @@ function Dashboard() {
   const [switchLoading, setSwitchLoading] = useState(false)
   const [viewDate, setViewDate] = useState(dayjs())
   const [showEmbed, setShowEmbed] = useState(false)
+  const [activeTab, setActiveTab] = useState<'messages' | 'polls'>('messages')
   const [walletBalance, setWalletBalance] = useState(0)
 
   const { toast } = useToast();
@@ -276,8 +278,37 @@ function Dashboard() {
           )}
         </div>
 
+        {/* Tabs */}
+        <div className="flex space-x-4 mb-8">
+          <Button
+            onClick={() => setActiveTab('messages')}
+            className={`flex-1 rounded-none border-4 border-black font-black uppercase text-xl py-6 transition-all ${
+              activeTab === 'messages'
+                ? 'bg-black text-yellow-400 shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] translate-x-[4px] translate-y-[4px]'
+                : 'bg-white text-black hover:bg-gray-100 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'
+            }`}
+          >
+            Messages
+          </Button>
+          <Button
+            onClick={() => setActiveTab('polls')}
+            className={`flex-1 rounded-none border-4 border-black font-black uppercase text-xl py-6 transition-all ${
+              activeTab === 'polls'
+                ? 'bg-black text-pink-500 shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] translate-x-[4px] translate-y-[4px]'
+                : 'bg-white text-black hover:bg-gray-100 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'
+            }`}
+          >
+            Cypher Polls
+          </Button>
+        </div>
+
+        {activeTab === 'polls' && (
+          <PollsDashboard username={username as string} />
+        )}
+
         {/* Date Navigator & Messages Section */}
-        <div className="mt-8">
+        {activeTab === 'messages' && (
+          <div className="mt-8">
           <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
             <h2 className="text-4xl font-black uppercase text-white tracking-tighter drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] stroke-black">Your Messages</h2>
             
@@ -326,7 +357,8 @@ function Dashboard() {
               </div>
             )}
           </div>
-        </div>
+          </div>
+        )}
 
       </div>
     </div>

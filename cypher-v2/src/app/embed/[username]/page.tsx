@@ -107,9 +107,9 @@ const EmbedProfile = () => {
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: `body { background-color: transparent !important; }` }} />
+      <style>{`body { background: transparent !important; }`}</style>
       <div className="min-h-screen bg-transparent p-4 font-sans selection:bg-pink-500 selection:text-white flex flex-col items-center justify-center">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-md relative">
           {/* Temporary KYC Banner */}
           <div className="bg-red-500 text-white border-4 border-black p-3 mb-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center transform -rotate-1 hover:rotate-0 transition-transform">
             <p className="font-black uppercase tracking-wide text-xs">

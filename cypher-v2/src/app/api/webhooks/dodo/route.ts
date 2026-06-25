@@ -23,12 +23,72 @@ export async function POST(request: NextRequest) {
       const content = metadata.content;
       const amountStr = metadata.amount;
       
+      // Payment gateways often lowercase metadata keys!
+      const pollId = metadata.pollId || metadata.pollid;
+      const optionId = metadata.optionId || metadata.optionid;
+      const expectedVotesStr = metadata.expectedVotes || metadata.expectedvotes;
+
+      await dbConnect();
+      
+      const taxAmount = data.tax ? (data.tax / 100) : 0;
+      const rawAmount = data.total_amount ? ((data.total_amount / 100) - taxAmount) : parseFloat(amountStr || '100');
+      
+      const platformFee = rawAmount * 0.10;
+      const creatorEarnings = rawAmount - platformFee;
+
+      // --- POLL BOOST LOGIC ---
+      if (pollId && optionId) {
+        const PollModel = (await import('@/models/Poll')).default;
+        const poll = await PollModel.findById(pollId);
+        if (!poll) {
+          console.error('Poll not found for webhook:', pollId);
+          return NextResponse.json({ success: false, message: 'Poll not found' }, { status: 404 });
+        }
+        
+        // Calculate exact votes strictly based on cold hard cash deposited!
+        // 1 USD = 50 votes. 100 INR = 50 votes (so 1 INR = 0.5 votes).
+        const currency = data.currency || 'USD';
+        let actualVotesToAdd = 0;
+        
+        if (currency.toUpperCase() === 'INR') {
+          actualVotesToAdd = Math.floor(rawAmount * 0.5);
+        } else {
+          actualVotesToAdd = Math.floor(rawAmount * 50);
+        }
+
+        // If for some reason they paid less than 1 vote worth, default to 1 so the UI doesn't break
+        if (actualVotesToAdd < 1) actualVotesToAdd = 1;
+
+        const result = await PollModel.updateOne(
+          { _id: pollId, "options.id": optionId },
+          { 
+            $inc: { 
+              "options.$.boostedVotes": actualVotesToAdd,
+              totalRevenue: rawAmount 
+            } 
+          }
+        );
+
+        if (result.modifiedCount === 0) {
+           console.error('Failed to update poll votes:', pollId);
+        }
+
+        // Add money to creator wallet
+        const user = await UserModel.findById(poll.userId);
+        if (user) {
+            user.walletBalance = (user.walletBalance || 0) + creatorEarnings;
+            await user.save();
+        }
+
+        return NextResponse.json({ success: true, message: 'Poll boosted successfully' });
+      }
+
+      // --- MESSAGE BOOST LOGIC (Original) ---
       if (!username || !content) {
-        console.error('Webhook missing metadata:', metadata);
+        console.error('Webhook missing metadata for message:', metadata);
         return NextResponse.json({ success: false, message: 'Missing metadata' }, { status: 400 });
       }
 
-      await dbConnect();
       const user = await UserModel.findOne({ username });
       
       if (!user) {
@@ -36,15 +96,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
       }
 
-      // Read ACTUAL amount paid from Dodo (total_amount is in lowest denominator e.g. paise/cents)
-      // Fallback to metadata.amount if missing for some reason
-      const rawAmount = data.total_amount ? (data.total_amount / 100) : parseFloat(amountStr || '100');
-      
-      // Calculate platform fee (e.g. 10%)
-      const platformFee = rawAmount * 0.10;
-      const creatorEarnings = rawAmount - platformFee;
-
-      // Create boosted message
       const newMessage = {
         content,
         createdAt: new Date(),
@@ -52,7 +103,7 @@ export async function POST(request: NextRequest) {
         amount: rawAmount,
       };
 
-      user.messages.push(newMessage as Message);
+      user.messages.push(newMessage as any);
       
       // Update wallet balance
       user.walletBalance = (user.walletBalance || 0) + creatorEarnings;
