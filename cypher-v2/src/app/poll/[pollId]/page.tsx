@@ -160,11 +160,12 @@ export default function PollPage() {
                         </Button>
                         
                         <Button 
-                          disabled={isVoting}
+                          // disabled={isVoting}
+                          disabled
                           onClick={() => handleBoostVote(option.id)}
                           className="flex-1 bg-pink-500 text-white hover:bg-pink-600 border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-black uppercase"
                         >
-                          <Zap className="mr-2 h-4 w-4 fill-white" /> BOOST VOTE
+                          <Zap className="mr-2 h-4 w-4 fill-white" /> BOOST VOTE <span className="text-xs">(UPCOMING)</span>
                         </Button>
                       </div>
                     )}

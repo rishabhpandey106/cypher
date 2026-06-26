@@ -2,6 +2,10 @@ import dbConnect from "@/utils/dbConfig";
 import PollModel from "@/models/Poll";
 import { NextResponse as res } from "next/server";
 import mongoose from "mongoose";
+import { cookies } from "next/headers";
+import { Redis } from "@upstash/redis";
+
+const redis = Redis.fromEnv();
 
 export async function POST(req: Request){
     await dbConnect();
@@ -13,12 +17,25 @@ export async function POST(req: Request){
             return res.json({message: "Invalid Poll ID or Option", success: false},{status: 400});
         }
 
+        // Cookie Check logic
+        const cookieStore = await cookies();
+        const hasVotedCookie = cookieStore.get(`voted_poll_${pollId}`);
+        
+        if (hasVotedCookie) {
+            return res.json({message: "You have already voted.", success: false},{status: 429});
+        }
+
         // IP Check logic
         const ip = req.headers.get("x-forwarded-for") || req.headers.get("remote-addr") || "unknown";
         
-        // In a production app, we would query a VotedIPs collection here.
-        // For simplicity and to not bloat the database immediately, we will just rely on localStorage 
-        // on the frontend for V1, but we still do the DB increment here safely.
+        if (ip !== "unknown") {
+            const redisKey = `poll_${pollId}_ip_${ip}`;
+            const hasVotedIP = await redis.get(redisKey);
+            
+            if (hasVotedIP) {
+                return res.json({message: "You have already voted.", success: false},{status: 429});
+            }
+        }
 
         const poll = await PollModel.findById(pollId);
 
@@ -38,7 +55,22 @@ export async function POST(req: Request){
         poll.options[optionIndex].freeVotes += 1;
         await poll.save();
 
-        return res.json({message: "Vote cast successfully", success: true, poll},{status: 200});
+        if (ip !== "unknown") {
+            const redisKey = `poll_${pollId}_ip_${ip}`;
+            // Set expiry to 24 hours (86400 seconds)
+            await redis.setex(redisKey, 86400, "voted");
+        }
+
+        const response = res.json({message: "Vote cast successfully", success: true, poll},{status: 200});
+        
+        response.cookies.set(`voted_poll_${pollId}`, 'true', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 86400 // 24 hours
+        });
+
+        return response;
 
     } catch (error) {
         console.error("Failed to cast vote", error);

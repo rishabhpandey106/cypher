@@ -146,7 +146,7 @@ export default function PollsDashboard({ username }: { username: string }) {
                 <Button 
                   onClick={() => {
                     const baseUrl = `${window.location.protocol}//${window.location.host}`;
-                    const embedCode = `<iframe src="${baseUrl}/embed/poll/${poll._id}" width="100%" height="720" frameborder="0"></iframe>`;
+                    const embedCode = `<iframe id="cypher-poll-${poll._id}" src="${baseUrl}/embed/poll/${poll._id}" width="100%" height="400" frameborder="0" scrolling="no"></iframe><script>window.addEventListener("message",function(e){if(e.data&&e.data.type==='cypher-poll-resize'&&e.data.pollId==='${poll._id}'){document.getElementById('cypher-poll-${poll._id}').style.height=e.data.height+'px'}});</script>`;
                     navigator.clipboard.writeText(embedCode);
                     toast({
                       title: "Embed Copied!",
