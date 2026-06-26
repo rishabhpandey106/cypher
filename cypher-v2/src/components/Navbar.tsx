@@ -16,7 +16,7 @@ const Navbar = () => {
         {/* Logo Section */}
         <div className='flex justify-center items-center gap-4'>
           <img
-            src="/logo.jfif"
+            src="/newlogo.png"
             className="w-12 h-12 md:w-16 md:h-16 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-yellow-400"
             alt="Cypher Logo"
           />

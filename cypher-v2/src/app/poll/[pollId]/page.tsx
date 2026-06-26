@@ -115,10 +115,18 @@ export default function PollPage() {
       <div className="w-full max-w-2xl relative z-10">
         <div className="bg-white border-4 border-black p-6 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-none mb-12 mt-4 md:mt-0">
           <div className="flex justify-between items-center mb-6">
-            <span className="bg-black text-yellow-400 font-black uppercase text-sm px-3 py-1 border-2 border-black -rotate-2">⚡ CYPHER POLL</span>
+            {/* <span className="bg-black text-yellow-400 font-black uppercase text-sm px-3 py-1 border-2 border-black -rotate-2">⚡ CYPHER POLL</span> */}
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] font-black bg-yellow-400 border-2 border-black px-2 py-1 uppercase text-black hover:bg-yellow-300 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+            >
+              ⚡ Built with Cypher
+            </a>
             {poll.userId?.username && <span className="font-bold text-gray-500 uppercase">By @{poll.userId.username}</span>}
           </div>
-          
+
           <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black mb-8 leading-tight">
             {poll.question}
           </h1>
@@ -138,7 +146,7 @@ export default function PollPage() {
               return (
                 <div key={option.id} className="relative group">
                   <div className="border-4 border-black bg-gray-50 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all">
-                    
+
                     <div className="flex justify-between items-center mb-4">
                       <span className="font-black text-xl uppercase">{option.id}. {option.text}</span>
                       <span className="font-bold text-gray-600">{totalOptionVotes} Votes ({percentage}%)</span>
@@ -151,15 +159,15 @@ export default function PollPage() {
 
                     {poll.isActive && (
                       <div className="flex flex-col sm:flex-row gap-4">
-                        <Button 
+                        <Button
                           disabled={isVoting || hasVotedFree}
                           onClick={() => handleFreeVote(option.id)}
                           className="flex-1 bg-white text-black hover:bg-gray-100 border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-black uppercase"
                         >
                           {hasVotedFree ? <CheckCircle className="mr-2 h-4 w-4" /> : "Vote (Free)"}
                         </Button>
-                        
-                        <Button 
+
+                        <Button
                           // disabled={isVoting}
                           disabled
                           onClick={() => handleBoostVote(option.id)}
